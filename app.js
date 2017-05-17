@@ -1,14 +1,43 @@
-var uws = require('uws');
-var uwsClient = new uws("ws://195.148.149.148:3001", {perMessageDeflate: false});
+/**
+ * Created by nikitak on 17.5.2017.
+ */
+var Wowza = require('./proto/wowza');
+var Gstream = require('./proto/gstream');
 
 
-uwsClient.on('open', function open() {
-    uwsClient.send('rbpi Initialization');
-});
+function App(uwsClient) {
+    this.uwsClient = uwsClient;
+    this.protos = {
+        wowza: Wowza,
+        gstream: Gstream
+    };
+    this.proto = null;
+}
+//TODO add security
+App.prototype.msg = function (rawData, flags) {
+    var app = this;
 
-uwsClient.on('message', function incoming(data, flags) {
-    // flags.binary will be set if a binary data is received.
-    // flags.masked will be set if the data was masked.
-    console.log("Data /", data);
-    console.log("Flags /", flags);
-});
+    try {
+        var data = JSON.parse(rawData);
+        //Check if proto is correctly defined by the clinet - wowza, gstream . . .
+        if (data.proto && app.protos.hasOwnProperty(data.proto)) {
+            //TODO sec
+            app.proto = new app.protos[data.proto](data);
+            if (typeof app.proto[data.method] === "function") {
+                app.proto[data.method]();
+            } else {
+                app.uwsClient.send(JSON.stringify({error: "No such method"}));
+            }
+        } else {
+            app.uwsClient.send(JSON.stringify({error: "No such proto"}));
+        }
+
+    } catch (e) {
+        console.log("JSON error parsing /", e);
+        console.log("DATA /", rawData);
+        console.log("Flags /", flags);
+    }
+
+};
+
+module.exports = App;

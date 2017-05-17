@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./app.js"
+    "start": "node ./connect.js"
   },
   "dependencies": {
     "uws": "^0.14.5"
