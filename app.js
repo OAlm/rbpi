@@ -4,6 +4,11 @@
 var Wowza = require('./proto/wowza');
 var Gstream = require('./proto/gstream');
 
+const PORT_BLACKLIST = [
+    80,
+    8080,
+    443
+];
 
 function App(uwsClient) {
     this.uwsClient = uwsClient;
@@ -22,14 +27,21 @@ App.prototype.msg = function (rawData, flags) {
         //Check if proto is correctly defined by the clinet - wowza, gstream . . .
         if (data.proto && app.protos.hasOwnProperty(data.proto)) {
             //TODO sec
-            app.proto = new app.protos[data.proto](data);
+            app.proto = new app.protos[data.proto](data, PORT_BLACKLIST);
+            //check if client wrote method correctly
             if (typeof app.proto[data.method] === "function") {
-                app.proto[data.method]();
+                app.uwsClient.send(JSON.stringify({
+                    success: app.proto[data.method]()
+                }));
             } else {
-                app.uwsClient.send(JSON.stringify({error: "No such method"}));
+                app.uwsClient.send(JSON.stringify({
+                    error: "No such method"
+                }));
             }
         } else {
-            app.uwsClient.send(JSON.stringify({error: "No such proto"}));
+            app.uwsClient.send(JSON.stringify({
+                error: "No such proto"
+            }));
         }
 
     } catch (e) {
