@@ -1,6 +1,8 @@
 var uws = require('uws');
 var App = require('./app');
 var settings = require('./settings.json');
+var exec = require('child_process').exec;
+
 const reconnectInterval = 1; //seconds
 var uwsClient;
 var msgHandler;
@@ -10,8 +12,22 @@ function connect() {
     msgHandler = new App(uwsClient);
 
     uwsClient.on('open', function open() {
-        uwsClient.send('{"status":"rbpi Initialization"}');
+        exec("cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2",function(error,stdout,stderr){
+            if(error){
+                console.log("Id Error: ", error);
+                global.id="fakeId0000000000";
+                uwsClient.send('{"status":"rbpiIni","id":"fakeId0000000000"}');
+            }else{
+                global.id = stdout;
+                if(stderr){
+                    global.id="fakeId0000000001";
+                    uwsClient.send('{"status":"rbpiIni","id":"fakeId0000000001"}');
+                }else{
+                    uwsClient.send('{"status":"rbpiIni","id":"'+stdout+'"}');
+                }
 
+            }
+        });
     });
 
     uwsClient.on('message', msgHandler.msg.bind(msgHandler));

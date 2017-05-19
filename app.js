@@ -31,15 +31,18 @@ App.prototype.msg = function (rawData, flags) {
             //check if client wrote method correctly
             if (typeof app.proto[data.method] === "function") {
                 app.uwsClient.send(JSON.stringify({
-                    success: app.proto[data.method]()
+                    id: global.id,
+                    msg: app.proto[data.method]()
                 }));
             } else {
                 app.uwsClient.send(JSON.stringify({
+                    id: global.id,
                     error: "No such method"
                 }));
             }
         } else {
             app.uwsClient.send(JSON.stringify({
+                id: global.id,
                 error: "No such proto"
             }));
         }
