@@ -40,6 +40,8 @@ App.prototype.msg = function (rawData, flags) {
                     error: "No such method"
                 }));
             }
+        } else if(data.status){
+            console.log(data.status);
         } else {
             app.uwsClient.send(JSON.stringify({
                 id: global.id,
