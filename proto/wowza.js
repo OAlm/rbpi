@@ -33,6 +33,7 @@ Wowza.prototype.setNewData = function (data, portBlacklist) {
 Wowza.prototype.start = function () {
     if (this.process != null) {
         this.process.kill("SIGKILL");
+        console.log("PID: ", this.process.pid);
     }
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(this.host)) {
         if (/^(\d{1,5})$/.test(this.port) && parseInt(this.port) < 65536 && this.portBlacklist.indexOf(this.port) === -1) {
@@ -77,6 +78,7 @@ Wowza.prototype.start = function () {
 Wowza.prototype.stop = function () {
 
     this.process.kill("SIGKILL");
+    console.log("PID: ", this.process.pid);
 
 
     return "Fake Stop";
