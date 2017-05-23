@@ -10,6 +10,7 @@ function Gstream(data, portBlacklist) {
     this.vf = (data.vf == 'true');
     this.hf = (data.hf == 'true');
     this.portBlacklist = portBlacklist;
+    this.process = null;
 }
 
 Gstream.prototype.setNewData = function (data, portBlacklist) {
