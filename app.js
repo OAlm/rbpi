@@ -38,6 +38,7 @@ App.prototype.msg = function (rawData, flags) {
             if (typeof app.proto[data.proto][data.method] === "function") {
                 var streaming = null;
                 for (var proto in app.proto) {
+                    console.log("app proto:", proto);
                     if (!streaming && app.proto[proto]["status"]() === "Streaming") {
                         streaming = proto;
                     }
