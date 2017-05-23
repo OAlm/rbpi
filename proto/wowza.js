@@ -3,6 +3,7 @@
  */
 var exec = require('child_process').exec;
 var settings = require("../settings.json");
+
 function Wowza(data, portBlacklist) {
     this.host = data.host;
     this.port = data.port;
@@ -17,6 +18,7 @@ function Wowza(data, portBlacklist) {
 
     this.process = null;
 }
+
 Wowza.prototype.setNewData = function (data, portBlacklist) {
     this.host = data.host || this.host;
     this.port = data.port || this.port;
@@ -58,6 +60,7 @@ Wowza.prototype.start = function () {
                     this.process.on('close', function(code) {
                         console.log('Wowza closing code: ' + code);
                     });
+                    console.log("PID: ", this.process.pid);
                     console.log('raspivid -n -o - -t 0 ' + ((this.vf) ? '-vf ' : '') + ((this.hf) ? '-hf ' : '') + '-w ' + res[0] + ' -h ' + res[1] + ' -fps 25 -b 25000000 | ffmpeg -i - -s ' + this.resolution + ' -r 25 -vcodec libx264 -an -preset ultrafast -tune zerolatency -f rtsp rtsp://' + settings.wowzaUname + ':' + settings.wowzaPass + '@' + this.host + ':' + this.port + '/' + this.app + '/' + this.streamName);
                     return "Started";
                 }
