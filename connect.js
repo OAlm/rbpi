@@ -32,7 +32,7 @@ function connect() {
                 } else {
                     uwsClient.send(JSON.stringify({
                         status: "rbpiIni",
-                        id: stdout
+                        id: stdout.trim()
                     }));
                 }
 
