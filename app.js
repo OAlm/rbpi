@@ -38,7 +38,7 @@ App.prototype.msg = function (rawData, flags) {
             if(app.proto[data.proto]===null) {
                 app.proto[data.proto] = new app.protos[data.proto](data, PORT_BLACKLIST);
             }else{
-                app.proto[data.proto].setNewData(data, PORT_BLACKLIST);
+                app.proto[data.proto]["setNewData"](data, PORT_BLACKLIST);
             }
             //check if client wrote method correctly
             if (typeof app.proto[data.proto][data.method] === "function") {
