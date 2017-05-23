@@ -10,29 +10,41 @@ const PORT_BLACKLIST = [
     443
 ];
 
-function App(uwsClient) {
-    this.uwsClient = uwsClient;
+function App() {
+    this.uwsClient = null;
     this.protos = {
         wowza: Wowza,
         gstream: Gstream
     };
-    this.proto = null;
+    this.proto = {
+        wowza:{
+            data:null,
+            object:null
+        },
+        gstream:{
+            data:null,
+            object:null
+        }
+    };
 }
 //TODO add security
 App.prototype.msg = function (rawData, flags) {
     var app = this;
-
     try {
         var data = JSON.parse(rawData);
         //Check if proto is correctly defined by the clinet - wowza, gstream . . .
         if (data.proto && app.protos.hasOwnProperty(data.proto)) {
             //TODO sec
-            app.proto = new app.protos[data.proto](data, PORT_BLACKLIST);
+            if(app.proto[data.proto]===null) {
+                app.proto[data.proto] = new app.protos[data.proto](data, PORT_BLACKLIST);
+            }else{
+                app.proto[data.proto].setNewData(data, PORT_BLACKLIST);
+            }
             //check if client wrote method correctly
-            if (typeof app.proto[data.method] === "function") {
+            if (typeof app.proto[data.proto][data.method] === "function") {
                 app.uwsClient.send(JSON.stringify({
                     id: global.id,
-                    msg: app.proto[data.method]()
+                    msg: app.proto[data.proto][data.method]()
                 }));
             } else {
                 app.uwsClient.send(JSON.stringify({

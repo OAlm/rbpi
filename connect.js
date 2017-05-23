@@ -5,12 +5,12 @@ var exec = require('child_process').exec;
 
 const reconnectInterval = 1; //seconds
 var uwsClient;
-var msgHandler;
+var msgHandler = new App();
 
 
 function connect() {
     uwsClient = new uws("ws://" + settings.uwsServer, {perMessageDeflate: false});
-    msgHandler = new App(uwsClient);
+    msgHandler.uwsClient=uwsClient;
     uwsClient.on('open', function open() {
 
         exec("cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2", function (error, stdout, stderr) {
@@ -23,7 +23,7 @@ function connect() {
                 }));
             } else {
                 global.id = stdout.trim();
-                console.log(stdout.trim());
+
                 if (stderr) {
                     global.id = "fakeId0000000001";
                     uwsClient.send(JSON.stringify({
