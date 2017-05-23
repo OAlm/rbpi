@@ -17,8 +17,8 @@ function App() {
         gstream: Gstream
     };
     this.proto = {
-        wowza:null,
-        gstream:null
+        wowza: null,
+        gstream: null
     };
 }
 //TODO add security
@@ -29,24 +29,37 @@ App.prototype.msg = function (rawData, flags) {
         //Check if proto is correctly defined by the clinet - wowza, gstream . . .
         if (data.proto && app.protos.hasOwnProperty(data.proto)) {
             //TODO sec
-            if(app.proto[data.proto]===null) {
+            if (app.proto[data.proto] === null) {
                 app.proto[data.proto] = new app.protos[data.proto](data, PORT_BLACKLIST);
-            }else{
+            } else {
                 app.proto[data.proto]["setNewData"](data, PORT_BLACKLIST);
             }
             //check if client wrote method correctly
             if (typeof app.proto[data.proto][data.method] === "function") {
-                app.uwsClient.send(JSON.stringify({
-                    id: global.id,
-                    msg: app.proto[data.proto][data.method]()
-                }));
+                var streaming = null;
+                for (var proto in app.proto) {
+                    if (!streaming && app.proto[proto]["status"]() === "Streaming") {
+                        streaming = proto;
+                    }
+                }
+                if (data.method === 'start' && streaming) {
+                    app.uwsClient.send(JSON.stringify({
+                        id: global.id,
+                        msg: "Already streaming: " + streaming
+                    }));
+                } else {
+                    app.uwsClient.send(JSON.stringify({
+                        id: global.id,
+                        msg: app.proto[data.proto][data.method]()
+                    }));
+                }
             } else {
                 app.uwsClient.send(JSON.stringify({
                     id: global.id,
                     error: "No such method"
                 }));
             }
-        } else if(data.status){
+        } else if (data.status) {
             console.log(data.status);
         } else {
             app.uwsClient.send(JSON.stringify({
