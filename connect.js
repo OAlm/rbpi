@@ -23,6 +23,7 @@ function connect() {
                 }));
             } else {
                 global.id = stdout.trim();
+                console.log(stdout.trim());
                 if (stderr) {
                     global.id = "fakeId0000000001";
                     uwsClient.send(JSON.stringify({
