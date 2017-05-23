@@ -38,16 +38,16 @@ Gstream.prototype.start = function () {
                         }
                     });
                     this.process.stdout.on('data', function (data) {
-                        console.log('Wowza stdout: ' + data);
+                        console.log('Gstream stdout: ' + data);
                     });
                     this.process.stderr.on('data', function (data) {
-                        console.log('Wowza stdout: ' + data);
+                        console.log('Gstream stdout: ' + data);
                     });
                     this.process.on('close', function (code) {
-                        console.log('Wowza closing code: ' + code);
+                        console.log('Gstream closing code: ' + code);
                     });
                     console.log("raspivid -n -o - -t 0 " + ((this.vf) ? '-vf ' : '') + ((this.hf) ? '-hf ' : '') + "-w " + res[0] + " -h " + res[1] + " -fps 30 -b 25000000 | gst-launch-1.0 -e -vvvv fdsrc  ! h264parse ! rtph264pay pt=96 ! udpsink host=" + this.sink + " port=" + this.port);
-                    return "Fake start";
+                    return "Started";
                 } else {
                     return "Invalid Resolution";
                 }
