@@ -3,6 +3,7 @@
  */
 var exec = require('child_process').exec;
 var settings = require("../settings.json");
+var kill = require('tree-kill');
 
 function Wowza(data, portBlacklist) {
     this.host = data.host;
@@ -34,7 +35,7 @@ Wowza.prototype.setNewData = function (data, portBlacklist) {
 };
 Wowza.prototype.start = function () {
     if (this.process != null) {
-        this.process.kill("SIGKILL");
+        kill(this.process.pid);
         console.log("PID: ", this.process.pid);
     }
     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(this.host)) {
@@ -80,7 +81,7 @@ Wowza.prototype.start = function () {
 ;
 Wowza.prototype.stop = function () {
 
-    this.process.kill("SIGKILL");
+    kill(this.process.pid);
     console.log("PID: ", this.process.pid);
 
 
