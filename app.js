@@ -17,14 +17,8 @@ function App() {
         gstream: Gstream
     };
     this.proto = {
-        wowza:{
-            data:null,
-            object:null
-        },
-        gstream:{
-            data:null,
-            object:null
-        }
+        wowza:null,
+        gstream:null
     };
 }
 //TODO add security
