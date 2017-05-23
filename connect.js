@@ -7,11 +7,12 @@ const reconnectInterval = 1; //seconds
 var uwsClient;
 var msgHandler;
 
-function connect() {
-    uwsClient = new uws("ws://" + settings.uwsServer + ":" + settings.uwsPort, {perMessageDeflate: false});
-    msgHandler = new App(uwsClient);
 
+function connect() {
+    uwsClient = new uws("ws://" + settings.uwsServer, {perMessageDeflate: false});
+    msgHandler = new App(uwsClient);
     uwsClient.on('open', function open() {
+
         exec("cat /proc/cpuinfo | grep Serial | cut -d ' ' -f 2", function (error, stdout, stderr) {
             if (error) {
                 console.log("Id Error: ", error);
@@ -43,6 +44,7 @@ function connect() {
 
     uwsClient.on('error', function (error) {
         console.log("Error: ", error);
+        setTimeout(connect, reconnectInterval * 1000);
     });
     //Try re-establishing connection on server shutdown
     uwsClient.on('close', function (code, reason) {
