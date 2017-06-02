@@ -9,7 +9,8 @@
   
 ## 3. Improvements
  - There is no authentication nor authorization when accessing the http api.
- - The control is limited to starting/stopping the video streams.  
+ - The control is limited to starting/stopping the video streams.
+   
 ## 4. Requirements for new protocol:
  Implementing new streaming method or service should be quite straightforward.
   1. Define what is the bash command to start stream for said method/service, which should pipe raspivid feed to another 
