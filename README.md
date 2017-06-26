@@ -1,6 +1,6 @@
 # Raspberry pi video transmitter
 ## 1. Installation
-`$ git clone *url*`  
+`$ git clone git@gitlab.mw.metropolia.fi:sohjoa/rbpi.git`  
 `$ npm install`
 ## 2. Description
  Nodejs application which uses uws to establish websocket connection to streamer controller. HTTP api implemented at 
