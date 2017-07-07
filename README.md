@@ -1,6 +1,7 @@
 # Raspberry pi video transmitter
 
-An application for transmitting video stream from Raspberry Pi camera to given endpoint.
+An application for controlling the transmission of video stream from Raspberry Pi camera to given endpoint.
+Support for Wowza and Gstreamer.
 
 ## 1. Installation
 
