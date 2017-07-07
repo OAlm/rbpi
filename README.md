@@ -1,7 +1,12 @@
 # Raspberry pi video transmitter
+
+An application for transmitting video stream from Raspberry Pi camera to given endpoint.
+
 ## 1. Installation
-`$ git clone git@gitlab.mw.metropolia.fi:sohjoa/rbpi.git`  
+
+`$ git clone git@github.com:OAlm/rbpi.git`  
 `$ npm install`
+
 ## 2. Description
  Nodejs application which uses uws to establish websocket connection to streamer controller. HTTP api implemented at 
  streamer controller calls methods of the video transmitter and passes client initialized variabled. Video transmitter 
